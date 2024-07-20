@@ -5,6 +5,7 @@ This project contains a **Spring Boot Demo Application**. It is used for testing
 ## Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
+- [Installation](#installation)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -17,6 +18,25 @@ The **sb-demo-app** is a simple Spring Boot application designed to demonstrate 
 - GitHub Actions workflow for CI/CD
 - Unit and integration tests
 - Application properties configuration
+
+## Installation
+To set up the project locally, follow these steps:
+
+1. **Clone the repository**:
+    ```sh
+    git clone https://github.com/yourusername/sb-demo-app.git
+    cd sb-demo-app
+    ```
+
+2. **Build the project**:
+    ```sh
+    ./mvnw clean install
+    ```
+
+3. **Run the application**:
+    ```sh
+    ./mvnw spring-boot:run
+    ```
 
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request with your changes. Ensure that your code follows the project's coding standards and passes all tests.
