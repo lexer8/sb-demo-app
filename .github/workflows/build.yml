@@ -13,10 +13,12 @@ on:
     branches-ignore: [ "main" ]
     paths-ignore:
       - README.md
+      - HELP.md
   pull_request:
     branches-ignore: [ "main" ]
     paths-ignore:
       - README.md
+      - HELP.md
 
 jobs:
   build:
