@@ -18,6 +18,7 @@ The **sb-demo-app** is a simple Spring Boot application designed to demonstrate 
 - GitHub Actions workflow for CI/CD
 - Unit and integration tests
 - Application properties configuration
+- Test the triggering pipeline with excluded README.md file
 
 ## Installation
 To set up the project locally, follow these steps:
