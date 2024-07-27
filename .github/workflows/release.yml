@@ -16,7 +16,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build:
+  release:
 
     runs-on: ubuntu-latest
     permissions:
@@ -85,7 +85,6 @@ jobs:
         run: |
           TAG=$(git describe --exact-match --tag --abbrev=0)
           echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "TAGS=$TAGS"
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -98,7 +97,7 @@ jobs:
           push: true
           # tags: ${{ steps.meta.outputs.tags }}
           tags: |
-            $(TAG)
+            "${{ env.TAG }}"
             latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
