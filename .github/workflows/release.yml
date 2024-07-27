@@ -94,4 +94,7 @@ jobs:
 
       - name: Logout from Docker Hub
         if: ${{ env.IS_SEMVER }}
-        run: docker logout
+        run: |
+          docker logout
+          echo "ref=${{ github.ref }}"
+          echo "IS_SEMVER=${{ env.IS_SEMVER }}"
