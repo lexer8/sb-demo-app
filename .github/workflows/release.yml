@@ -7,11 +7,11 @@ on:
       - "v*.*.*"
 
 env:
+  RELEASE_ENABLED: ${{ startsWith(github.ref, 'refs/tags/v') && contains(github.ref, 'refs/tags/v') && contains(github.ref, 'refs/tags/v[0-9]+\\.[0-9]+\\.[0-9]+') }}
   # Use docker.io for Docker Hub if empty; otherwise, ghcr.io
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  RELEASE_ENABLED: ${{ startsWith(github.ref, 'refs/tags/v') && contains(github.ref, 'refs/tags/v') && contains(github.ref, 'refs/tags/v[0-9]+\\.[0-9]+\\.[0-9]+') }}
 
 jobs:
   release:
@@ -60,12 +60,10 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        if: ${{ env.RELEASE_ENABLED }}
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
 
@@ -85,4 +83,6 @@ jobs:
 
       - name: Logout from Docker Hub
         if: ${{ env.RELEASE_ENABLED }}
-        run: docker logout
+        run: |
+          docker logout
+          echo "RELEASE_ENABLED=${{ github.RELEASE_ENABLED }}"
