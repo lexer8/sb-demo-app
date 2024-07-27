@@ -47,6 +47,8 @@ jobs:
           else
             echo "IS_SEMVER=false" >> $GITHUB_ENV
           fi
+          echo "ref=${{ github.ref }}"
+          echo "IS_SEMVER=${{ env.IS_SEMVER }}"
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -92,7 +94,4 @@ jobs:
 
       - name: Logout from Docker Hub
         if: ${{ env.IS_SEMVER }}
-        run: |
-          docker logout
-          echo "ref=${{ github.ref }}"
-          echo "IS_SEMVER=${{ env.IS_SEMVER }}"
+        run: docker logout
