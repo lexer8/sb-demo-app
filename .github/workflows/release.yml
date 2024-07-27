@@ -76,14 +76,15 @@ jobs:
 
       - name: Docker tags
         env:
-          TAGS: ${{ steps.meta.output.tags }}
+          TAGS: ${{ steps.meta.outputs.tags }}
         run: |
           echo "Obtained Docker tags."
           echo $TAGS
 
       - name: Obtain GitHub tag
+        id: get-tag
         run: |
-          TAG=$(git describe --exact-match --tag --abbrev=0)
+          TAG=$(git describe --exact-match --tag --abbrev=0 || echo "latest")
           echo "TAG=$TAG" >> $GITHUB_ENV
 
       # Build and push Docker image with Buildx (don't push on PR)
@@ -96,9 +97,7 @@ jobs:
           # push: ${{ github.event_name != 'pull_request' }}
           push: true
           # tags: ${{ steps.meta.outputs.tags }}
-          tags: |
-            "${{ env.TAG }}"
-            latest
+          tags: ${{ env.TAG }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
