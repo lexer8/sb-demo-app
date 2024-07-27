@@ -11,6 +11,7 @@ env:
   REGISTRY: docker.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  IS_SEMVER: false
 
 jobs:
   release:
@@ -44,11 +45,12 @@ jobs:
         run: |
           if [[ "${GITHUB_REF#refs/tags/}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "IS_SEMVER=true" >> $GITHUB_ENV
-          else
-            echo "IS_SEMVER=false" >> $GITHUB_ENV
           fi
+
+      - name: Check tag and IS_SEMVER variable
+        run: |
           echo "ref=${{ github.ref }}"
-          echo "IS_SEMVER=${{ env.IS_SEMVER }}"
+          echo "IS_SEMVER is now ${{ env.IS_SEMVER }}"
 
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
@@ -59,7 +61,7 @@ jobs:
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
-        if: ${{ env.IS_SEMVER }}
+        if: ${{ env.IS_SEMVER == 'true' }}
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -82,7 +84,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
         id: build-and-push
-        if: ${{ env.IS_SEMVER }}
+        if: ${{ env.IS_SEMVER == 'true' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -93,8 +95,5 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Logout from Docker Hub
-        if: ${{ env.IS_SEMVER }}
-        run: |
-          docker logout
-          echo "ref=${{ github.ref }}"
-          echo "IS_SEMVER=${{ env.IS_SEMVER }}"
+        if: ${{ env.IS_SEMVER == 'true' }}
+        run: docker logout
